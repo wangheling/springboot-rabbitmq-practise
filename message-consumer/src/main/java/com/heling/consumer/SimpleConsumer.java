@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @date 2019/11/15 16:56
  */
 @Component
-@RabbitListener(queues = "MY_FIRST_QUEUE")
+@RabbitListener(queues = "my_queue")
 @Slf4j
 public class SimpleConsumer {
 

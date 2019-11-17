@@ -3,6 +3,7 @@ package com.heling.config;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -19,9 +20,9 @@ import org.springframework.context.annotation.PropertySource;
  * @description rabbitMq配置类
  * @date 2019/11/15 17:54
  */
-@Slf4j
 @Configuration
 @PropertySource("classpath:mq.properties")
+@Slf4j
 public class RabbitConfig {
 
     @Value("${com.heling.directexchange}")
@@ -49,7 +50,7 @@ public class RabbitConfig {
      * @Desc：封装了创建连接、创建消息信道、收发消息、消息格式转换（ConvertAndSend→Message）、关闭信道、关闭连接等等操作
      */
     @Bean("myRabbitTemplate")
-    public RabbitTemplate myRabbitTemplate(final ConnectionFactory connectionFactory) {
+    public RabbitTemplate myRabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         //所有的消息发送都会转换成JSON格式发到交换机
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
@@ -104,11 +105,21 @@ public class RabbitConfig {
         return new Queue("my_queue");
     }
 
+    @Bean("manualAckQueue")
+    public Queue manualAckQueue() {
+        return new Queue("manual_ack_queue");
+    }
+
 
     @Bean
     public Binding firstBinding(@Qualifier("myQueue") Queue queue, @Qualifier("directExchange") DirectExchange directExchange) {
-        return BindingBuilder.bind(queue).to(directExchange).with("com.heling");
+        return BindingBuilder.bind(queue).to(directExchange).with("com.heling.simple");
 
+    }
+
+    @Bean
+    public Binding secondBinding(@Qualifier("manualAckQueue") Queue queue, @Qualifier("directExchange") DirectExchange directExchange) {
+        return BindingBuilder.bind(queue).to(directExchange).with("com.heling.manual");
     }
 
 

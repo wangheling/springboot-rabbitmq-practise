@@ -21,6 +21,7 @@ public class RabbitConfig {
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
         factory.setAutoStartup(true);
+        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         return factory;
     }
 }

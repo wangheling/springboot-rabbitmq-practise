@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Slf4j
-public class SimpleService {
+public class SendService {
 
 //    @Resource
 //    private AmqpTemplate amqpTemplate;
@@ -30,8 +30,14 @@ public class SimpleService {
     @Qualifier("myRabbitTemplate")
     private RabbitTemplate myRabbiTemplate;
 
-    public void send() {
-        String jsonBody = JSONObject.toJSONString("second msg");
-        myRabbiTemplate.convertAndSend("DIRECT_EXCHANGE","com.heling", jsonBody);
+    public void sendSimpleMq() {
+        String jsonBody = JSONObject.toJSONString("simple msg");
+        myRabbiTemplate.convertAndSend("DIRECT_EXCHANGE","com.heling.simple", jsonBody);
+    }
+
+
+    public void sendManualAckMq(String msg) {
+        String jsonBody = JSONObject.toJSONString(msg);
+        myRabbiTemplate.convertAndSend("DIRECT_EXCHANGE","com.heling.manual", jsonBody);
     }
 }

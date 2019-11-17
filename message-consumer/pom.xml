@@ -6,7 +6,6 @@
         <groupId>com.heling</groupId>
         <artifactId>springboot-rabbitmq-practise</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.heling</groupId>
     <artifactId>message-consumer</artifactId>

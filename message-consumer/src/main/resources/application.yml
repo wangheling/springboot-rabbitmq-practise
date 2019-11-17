@@ -8,3 +8,8 @@ spring:
     username: root
     password: root
     virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
+      direct:
+        acknowledge-mode: manual

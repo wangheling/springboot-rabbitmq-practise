@@ -10,5 +10,3 @@ spring:
     virtual-host: /
     publisher-confirms: true #开启消息确认机制
     publisher-returns: true #支持消息发送失败返回队列
-
-

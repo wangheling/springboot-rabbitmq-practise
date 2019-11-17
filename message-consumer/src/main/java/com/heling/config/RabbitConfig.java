@@ -43,7 +43,6 @@ public class RabbitConfig {
     @Bean
     public Binding firstBinding(@Qualifier("myQueue") Queue queue, @Qualifier("directExchange") DirectExchange directExchange) {
         return BindingBuilder.bind(queue).to(directExchange).with("com.heling.simple");
-
     }
 
     @Bean
@@ -51,13 +50,35 @@ public class RabbitConfig {
         return BindingBuilder.bind(queue).to(directExchange).with("com.heling.manual");
     }
 
-    @Bean
-    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+    /**
+     * 自定义ListenerContainerFactory
+     *
+     * 设置应答为手动应答，需要在Consumer上@RabbitListener指定
+     * containerFactory = "rabbitListenerContainerFactoryManualAck"
+     */
+    @Bean("rabbitListenerContainerFactoryManualAck")
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactoryManualAck(ConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(new Jackson2JsonMessageConverter());
         factory.setAutoStartup(true);
         factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        return factory;
+    }
+
+    /**
+     * 自定义ListenerContainerFactory
+     *
+     * 设置应答为无应答，需要在Consumer上@RabbitListener指定
+     * containerFactory = "rabbitListenerContainerFactoryNoneAck"
+     */
+    @Bean("rabbitListenerContainerFactoryNoneAck")
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactoryNoneAck(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(new Jackson2JsonMessageConverter());
+        factory.setAutoStartup(true);
+        factory.setAcknowledgeMode(AcknowledgeMode.NONE);
         return factory;
     }
 }

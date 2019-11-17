@@ -16,7 +16,7 @@ import java.io.IOException;
  * @date 2019/11/17 15:22
  */
 @Component
-@RabbitListener(queues = "manual_ack_queue")
+@RabbitListener(queues = "manual_ack_queue",containerFactory = "rabbitListenerContainerFactoryManualAck")
 @Slf4j
 public class ManualAckConsumer {
 

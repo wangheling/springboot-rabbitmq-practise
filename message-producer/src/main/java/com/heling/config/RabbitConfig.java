@@ -21,13 +21,8 @@ import org.springframework.context.annotation.PropertySource;
  * @date 2019/11/15 17:54
  */
 @Configuration
-@PropertySource("classpath:mq.properties")
 @Slf4j
 public class RabbitConfig {
-
-    @Value("${com.heling.directexchange}")
-    private String directExchange;
-
 
     /**
      * 可以设置admin的属性
@@ -94,33 +89,5 @@ public class RabbitConfig {
 
         return rabbitTemplate;
     }
-
-    @Bean("directExchange")
-    public DirectExchange directExchange() {
-        return new DirectExchange(directExchange);
-    }
-
-    @Bean("myQueue")
-    public Queue myQueue() {
-        return new Queue("my_queue");
-    }
-
-    @Bean("manualAckQueue")
-    public Queue manualAckQueue() {
-        return new Queue("manual_ack_queue");
-    }
-
-
-    @Bean
-    public Binding firstBinding(@Qualifier("myQueue") Queue queue, @Qualifier("directExchange") DirectExchange directExchange) {
-        return BindingBuilder.bind(queue).to(directExchange).with("com.heling.simple");
-
-    }
-
-    @Bean
-    public Binding secondBinding(@Qualifier("manualAckQueue") Queue queue, @Qualifier("directExchange") DirectExchange directExchange) {
-        return BindingBuilder.bind(queue).to(directExchange).with("com.heling.manual");
-    }
-
 
 }
